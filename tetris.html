@@ -40,14 +40,43 @@
                 }
             }
 
-            // add block to field
-            var block = true;
-            field[0][4] = block;
+            function addBlock(row, column, color) {
+                 // add block to field
+                field[row][column] = true;
 
-            // make block visible in DOM
-            var DOM_row = document.querySelectorAll("tr")[0];
-            var DOM_block = DOM_row.querySelectorAll("td")[4];
-            DOM_block.setAttribute("bgcolor", 'red');
+                // make block visible in DOM
+                var DOM_row = document.querySelectorAll("tr")[row];
+                var DOM_block = DOM_row.querySelectorAll("td")[column];
+                DOM_block.setAttribute("bgcolor", color);
+            }
+
+            function removeBlock(row, column) {
+                 // remove block from field
+                field[row][column] = false;
+
+                // remove block from DOM
+                var DOM_row = document.querySelectorAll("tr")[row];
+                var DOM_block = DOM_row.querySelectorAll("td")[column];
+                DOM_block.setAttribute("bgcolor", 'white');
+            }
+
+            function moveblock(row, column, delta_row, delta_column, color) {
+                var new_row = row + delta_row
+                var new_column = column + delta_column
+                // TODO: check if new position is outside of field
+                // TODO: check if new position is already occupied
+
+                removeBlock(row, column)
+                addBlock(new_row, new_column, color)
+            }
+
+            // tests
+            addBlock(0, 4, "red")
+            addBlock(1, 4, "red")
+            addBlock(2, 4, "red")
+
+            removeBlock(1, 4)
+            moveblock(2, 4, 1, 1, "red")
 
         </script>
     </body>
