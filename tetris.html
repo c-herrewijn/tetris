@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="UTF-8" />
         <title>Tetris</title>
         <style>
-            table  {
+            table {
                 /* tetris field table should have a ratio 2:1 */
-                border:1px solid black;
-                width:300px ;
-                height:600px ;
+                border: 1px solid black;
+                width: 300px;
+                height: 600px;
             }
         </style>
     </head>
@@ -16,5 +16,39 @@
         <h1>Tetris</h1>
         <!-- empty table, this will be the tetris field -->
         <table id="tetris"></table>
+
+        <script>
+            // global variables
+            var nr_rows = 20;
+            var nr_columns = 10;
+
+            // define field
+            var field = [];
+            for (var i = 0; i < nr_rows; i++) {
+                field[i] = new Array(10);
+            }
+
+            // add field to DOM
+            var tetris_table = document.getElementById("tetris");
+
+            for (var i = 0; i < nr_rows; i++) {
+                var newRow = tetris_table.insertRow(0);
+                for (j = 0; j < nr_columns; j++) {
+                    var newCell = newRow.insertCell(0);
+                    // put text in the cell otherwise we can not give it a color later on
+                    newCell.appendChild(document.createTextNode(' '))
+                }
+            }
+
+            // add block to field
+            var block = true;
+            field[0][4] = block;
+
+            // make block visible in DOM
+            var DOM_row = document.querySelectorAll("tr")[0];
+            var DOM_block = DOM_row.querySelectorAll("td")[4];
+            DOM_block.setAttribute("bgcolor", 'red');
+
+        </script>
     </body>
 </html>
