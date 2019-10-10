@@ -36,12 +36,12 @@
                 for (j = 0; j < nr_columns; j++) {
                     var newCell = newRow.insertCell(0);
                     // put text in the cell otherwise we can not give it a color later on
-                    newCell.appendChild(document.createTextNode(' '))
+                    newCell.appendChild(document.createTextNode(" "));
                 }
             }
 
             function addBlock(row, column, color) {
-                 // add block to field
+                // add block to field
                 field[row][column] = true;
 
                 // make block visible in DOM
@@ -51,32 +51,33 @@
             }
 
             function removeBlock(row, column) {
-                 // remove block from field
+                // remove block from field
                 field[row][column] = false;
 
                 // remove block from DOM
                 var DOM_row = document.querySelectorAll("tr")[row];
                 var DOM_block = DOM_row.querySelectorAll("td")[column];
-                DOM_block.setAttribute("bgcolor", 'white');
+                DOM_block.setAttribute("bgcolor", "white");
             }
 
             function moveblock(row, column, delta_row, delta_column, color) {
-                var new_row = row + delta_row
-                var new_column = column + delta_column
+                var new_row = row + delta_row;
+                var new_column = column + delta_column;
                 // TODO: check if new position is outside of field
                 // TODO: check if new position is already occupied
 
-                removeBlock(row, column)
-                addBlock(new_row, new_column, color)
+                removeBlock(row, column);
+                addBlock(new_row, new_column, color);
             }
 
             function validate_fullrow(row) {
                 for (var column = 0; column < nr_columns; column++) {
-                    if (field[row][column] != true) {  // note cells can be true, false, or undefined
-                        return false
+                    if (field[row][column] != true) {
+                        // note cells can be true, false, or undefined
+                        return false;
                     }
                 }
-                return true
+                return true;
             }
 
             // tests
