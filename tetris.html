@@ -97,6 +97,17 @@
                     field.add_block(row, column, color);
                 },
 
+                find_max_jumpdistance: function() {
+                    let jumpdistance = 0;
+                    let column = active_block.column;
+                    let row = active_block.row + 1;
+                    while (field.validate_cell(row, column) === true) {
+                        jumpdistance += 1;
+                        row += 1;
+                    }
+                    return jumpdistance;
+                },
+
                 move: function(delta_row, delta_column) {
                     const new_row = active_block.row + delta_row;
                     const new_column = active_block.column + delta_column;
@@ -128,9 +139,12 @@
 
             // event listeners:
             window.addEventListener("keyup", function(e) {
-                // press space (= 32) to create a block in the intial positin
+                // press space (= 32) for maximal drop
                 if (e.keyCode === 32) {
-                    // TODO: implement action for spacebar
+                    const jumpdistance = active_block.find_max_jumpdistance();
+                    if (jumpdistance > 0) {
+                        active_block.move(jumpdistance, 0);
+                    }
                 }
 
                 // left: 37
