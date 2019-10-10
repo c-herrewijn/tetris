@@ -25,6 +25,7 @@
 
             // field
             let field = [];
+            // TODO: put field properties in functions: initialize, validate_rows, remove_rows, add block, remove block
             for (let i = 0; i < nr_rows; i++) {
                 field[i] = new Array(10);
             }
@@ -41,10 +42,28 @@
             // active block
             let active_block = {
                 // initial values
+
+                // TODO: add functions function and fixed
                 row: 0,
                 column: 4,
-                color: "red"
+                color: "red",
+
+                move: function(delta_row, delta_column) {
+                    const new_row = active_block.row + delta_row;
+                    const new_column = active_block.column + delta_column;
+                    const current_row = active_block.row;
+                    const current_column = active_block.column;
+
+                    // update position
+                    active_block.row = new_row;
+                    active_block.column = new_column;
+
+                    // update DOM
+                    removeBlock(current_row, current_column);
+                    addBlock(new_row, new_column, active_block.color);
+                }
             };
+
             // add active block to field and DOM
             addBlock(active_block.row, active_block.column, active_block.color);
 
@@ -69,27 +88,6 @@
                 DOM_block.setAttribute("bgcolor", "white");
             }
 
-            function move_active_block(delta_row, delta_column) {
-                // TODO: move function to active block
-
-                // calculate new position
-                const new_row = active_block.row + delta_row;
-                const new_column = active_block.column + delta_column;
-                const current_row = active_block.row;
-                const current_column = active_block.column;
-
-                // TODO: check if new position is outside of field
-                // TODO: check if new position is already occupied
-
-                // update position of active block
-                active_block.row = new_row;
-                active_block.column = new_column;
-
-                // update DOM
-                removeBlock(current_row, current_column);
-                addBlock(new_row, new_column, active_block.color);
-            }
-
             function validate_fullrow(row) {
                 for (let column = 0; column < nr_columns; column++) {
                     if (field[row][column] != true) {
@@ -109,22 +107,22 @@
 
                 // left: 37
                 if (e.keyCode === 37) {
-                    move_active_block(0, -1);
+                    active_block.move(0, -1);
                 }
 
                 // right: 39
                 if (e.keyCode === 39) {
-                    move_active_block(0, 1);
+                    active_block.move(0, 1);
                 }
 
                 // up: 38
                 if (e.keyCode === 38) {
-                    move_active_block(-1, 0);
+                    active_block.move(-1, 0);
                 }
 
                 // down: 40
                 if (e.keyCode === 40) {
-                    move_active_block(1, 0);
+                    active_block.move(1, 0);
                 }
             });
         </script>
