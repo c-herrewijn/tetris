@@ -80,25 +80,55 @@
                 return true;
             }
 
+            // event listeners:
+            window.addEventListener("keyup", function(e) {
+                // TODO: moving should work on active block, rather than on dummy position (6, 6)
+                // press space (= 32) to create a block in the intial positin
+                if (e.keyCode === 32) {
+                    addBlock(0, 4, "red");
+                }
+
+                // left: 37
+                if (e.keyCode === 37) {
+                    moveblock(6, 6, 0, -1, "red");
+                }
+
+                // right: 39
+                if (e.keyCode === 39) {
+                    moveblock(6, 6, 0, 1, "red");
+                }
+
+                // up: 38
+                if (e.keyCode === 38) {
+                    moveblock(6, 6, -1, 0, "red");
+                }
+
+                // down: 40
+                if (e.keyCode === 40) {
+                    moveblock(6, 6, 1, 0, "red");
+                }
+            });
+
             // tests
-            addBlock(0, 4, "red")
-            addBlock(1, 4, "red")
-            addBlock(2, 4, "red")
+            addBlock(6, 6, "green");
 
-            removeBlock(1, 4)
-            moveblock(2, 4, 1, 1, "red")
+            // addBlock(0, 4, "red");
+            // addBlock(1, 4, "red");
+            // addBlock(2, 4, "red");
 
-            addBlock(1, 0, "green")
-            addBlock(1, 1, "red")
-            addBlock(1, 2, "red")
-            addBlock(1, 3, "red")
-            addBlock(1, 4, "red")
-            addBlock(1, 5, "red")
-            addBlock(1, 6, "red")
-            addBlock(1, 7, "red")
-            addBlock(1, 8, "red")
-            addBlock(1, 9, "red")
+            // removeBlock(1, 4);
+            // moveblock(2, 4, 1, 1, "red");
 
+            // addBlock(1, 0, "green");
+            // addBlock(1, 1, "red");
+            // addBlock(1, 2, "red");
+            // addBlock(1, 3, "red");
+            // addBlock(1, 4, "red");
+            // addBlock(1, 5, "red");
+            // addBlock(1, 6, "red");
+            // addBlock(1, 7, "red");
+            // addBlock(1, 8, "red");
+            // addBlock(1, 9, "red");
         </script>
     </body>
 </html>
