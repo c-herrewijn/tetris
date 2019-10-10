@@ -24,29 +24,64 @@
             const tetris_table = document.getElementById("tetris");
 
             // field
-            let field = [];
-            // TODO: put field properties in functions: initialize, validate_rows, remove_rows, add block, remove block
-            for (let i = 0; i < nr_rows; i++) {
-                field[i] = new Array(10);
-            }
-            // add field to DOM
-            for (let i = 0; i < nr_rows; i++) {
-                let newRow = tetris_table.insertRow(0);
-                for (j = 0; j < nr_columns; j++) {
-                    let newCell = newRow.insertCell(0);
-                    // put text in the cell otherwise we can not give it a color later on
-                    newCell.appendChild(document.createTextNode(" "));
+            let field = {
+                field: [],
+
+                spawn: function() {
+                    // add empty rows and cells to the field matrix
+                    for (let i = 0; i < nr_rows; i++) {
+                        field.field[i] = new Array(nr_columns);
+                    }
+                    // add field to DOM
+                    for (let i = 0; i < nr_rows; i++) {
+                        let newRow = tetris_table.insertRow(0);
+                        for (j = 0; j < nr_columns; j++) {
+                            let newCell = newRow.insertCell(0);
+                            // put text in the cell otherwise we can not give it a color later on
+                            newCell.appendChild(document.createTextNode(" "));
+                        }
+                    }
+                },
+
+                add_block: function(row, column, color) {
+                    // add block to field
+                    field.field[row][column] = true;
+
+                    // make block visible in DOM
+                    const DOM_row = document.querySelectorAll("tr")[row];
+                    const DOM_block = DOM_row.querySelectorAll("td")[column];
+                    DOM_block.setAttribute("bgcolor", color);
+                },
+
+                remove_block: function(row, column) {
+                    // remove block from field
+                    field.field[row][column] = false;
+
+                    // remove block from DOM
+                    const DOM_row = document.querySelectorAll("tr")[row];
+                    const DOM_block = DOM_row.querySelectorAll("td")[column];
+                    DOM_block.removeAttribute("bgcolor");
+                },
+
+                validate_fullrow: function(row) {
+                    for (let column = 0; column < nr_columns; column++) {
+                        if (field.field[row][column] != true) {
+                            // note: cells can be true, false, or undefined
+                            return false;
+                        }
+                    }
+                    return true;
                 }
-            }
+            };
 
             // active block
             let active_block = {
-                // initial values
-
-                // TODO: add functions function and fixed
-                row: 0,
-                column: 4,
-                color: "red",
+                spawn: function(row, column, color) {
+                    active_block.row = row;
+                    active_block.column = column;
+                    active_block.color = color;
+                    field.add_block(row, column, color);
+                },
 
                 move: function(delta_row, delta_column) {
                     const new_row = active_block.row + delta_row;
@@ -54,49 +89,22 @@
                     const current_row = active_block.row;
                     const current_column = active_block.column;
 
+                    // TODO: check if new position is outside of field
+                    // TODO: check if new position is already occupied
+
                     // update position
                     active_block.row = new_row;
                     active_block.column = new_column;
 
                     // update DOM
-                    removeBlock(current_row, current_column);
-                    addBlock(new_row, new_column, active_block.color);
+                    field.remove_block(current_row, current_column);
+                    field.add_block(new_row, new_column, active_block.color);
                 }
             };
 
-            // add active block to field and DOM
-            addBlock(active_block.row, active_block.column, active_block.color);
-
-            // global functions
-            function addBlock(row, column, color) {
-                // add block to field
-                field[row][column] = true;
-
-                // make block visible in DOM
-                const DOM_row = document.querySelectorAll("tr")[row];
-                const DOM_block = DOM_row.querySelectorAll("td")[column];
-                DOM_block.setAttribute("bgcolor", color);
-            }
-
-            function removeBlock(row, column) {
-                // remove block from field
-                field[row][column] = false;
-
-                // remove block from DOM
-                const DOM_row = document.querySelectorAll("tr")[row];
-                const DOM_block = DOM_row.querySelectorAll("td")[column];
-                DOM_block.setAttribute("bgcolor", "white");
-            }
-
-            function validate_fullrow(row) {
-                for (let column = 0; column < nr_columns; column++) {
-                    if (field[row][column] != true) {
-                        // note cells can be true, false, or undefined
-                        return false;
-                    }
-                }
-                return true;
-            }
+            // start game
+            field.spawn();
+            active_block.spawn(0, 4, "red");
 
             // event listeners:
             window.addEventListener("keyup", function(e) {
