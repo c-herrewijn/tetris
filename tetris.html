@@ -18,35 +18,44 @@
         <table id="tetris"></table>
 
         <script>
-            // global variables
-            var nr_rows = 20;
-            var nr_columns = 10;
+            // constants
+            const nr_rows = 20;
+            const nr_columns = 10;
+            const tetris_table = document.getElementById("tetris");
 
-            // define field
-            var field = [];
-            for (var i = 0; i < nr_rows; i++) {
+            // field
+            let field = [];
+            for (let i = 0; i < nr_rows; i++) {
                 field[i] = new Array(10);
             }
-
             // add field to DOM
-            var tetris_table = document.getElementById("tetris");
-
-            for (var i = 0; i < nr_rows; i++) {
-                var newRow = tetris_table.insertRow(0);
+            for (let i = 0; i < nr_rows; i++) {
+                let newRow = tetris_table.insertRow(0);
                 for (j = 0; j < nr_columns; j++) {
-                    var newCell = newRow.insertCell(0);
+                    let newCell = newRow.insertCell(0);
                     // put text in the cell otherwise we can not give it a color later on
                     newCell.appendChild(document.createTextNode(" "));
                 }
             }
 
+            // active block
+            let active_block = {
+                // initial values
+                row: 0,
+                column: 4,
+                color: "red"
+            };
+            // add active block to field and DOM
+            addBlock(active_block.row, active_block.column, active_block.color);
+
+            // global functions
             function addBlock(row, column, color) {
                 // add block to field
                 field[row][column] = true;
 
                 // make block visible in DOM
-                var DOM_row = document.querySelectorAll("tr")[row];
-                var DOM_block = DOM_row.querySelectorAll("td")[column];
+                const DOM_row = document.querySelectorAll("tr")[row];
+                const DOM_block = DOM_row.querySelectorAll("td")[column];
                 DOM_block.setAttribute("bgcolor", color);
             }
 
@@ -55,23 +64,34 @@
                 field[row][column] = false;
 
                 // remove block from DOM
-                var DOM_row = document.querySelectorAll("tr")[row];
-                var DOM_block = DOM_row.querySelectorAll("td")[column];
+                const DOM_row = document.querySelectorAll("tr")[row];
+                const DOM_block = DOM_row.querySelectorAll("td")[column];
                 DOM_block.setAttribute("bgcolor", "white");
             }
 
-            function moveblock(row, column, delta_row, delta_column, color) {
-                var new_row = row + delta_row;
-                var new_column = column + delta_column;
+            function move_active_block(delta_row, delta_column) {
+                // TODO: move function to active block
+
+                // calculate new position
+                const new_row = active_block.row + delta_row;
+                const new_column = active_block.column + delta_column;
+                const current_row = active_block.row;
+                const current_column = active_block.column;
+
                 // TODO: check if new position is outside of field
                 // TODO: check if new position is already occupied
 
-                removeBlock(row, column);
-                addBlock(new_row, new_column, color);
+                // update position of active block
+                active_block.row = new_row;
+                active_block.column = new_column;
+
+                // update DOM
+                removeBlock(current_row, current_column);
+                addBlock(new_row, new_column, active_block.color);
             }
 
             function validate_fullrow(row) {
-                for (var column = 0; column < nr_columns; column++) {
+                for (let column = 0; column < nr_columns; column++) {
                     if (field[row][column] != true) {
                         // note cells can be true, false, or undefined
                         return false;
@@ -82,53 +102,31 @@
 
             // event listeners:
             window.addEventListener("keyup", function(e) {
-                // TODO: moving should work on active block, rather than on dummy position (6, 6)
                 // press space (= 32) to create a block in the intial positin
                 if (e.keyCode === 32) {
-                    addBlock(0, 4, "red");
+                    // TODO: implement action for spacebar
                 }
 
                 // left: 37
                 if (e.keyCode === 37) {
-                    moveblock(6, 6, 0, -1, "red");
+                    move_active_block(0, -1);
                 }
 
                 // right: 39
                 if (e.keyCode === 39) {
-                    moveblock(6, 6, 0, 1, "red");
+                    move_active_block(0, 1);
                 }
 
                 // up: 38
                 if (e.keyCode === 38) {
-                    moveblock(6, 6, -1, 0, "red");
+                    move_active_block(-1, 0);
                 }
 
                 // down: 40
                 if (e.keyCode === 40) {
-                    moveblock(6, 6, 1, 0, "red");
+                    move_active_block(1, 0);
                 }
             });
-
-            // tests
-            addBlock(6, 6, "green");
-
-            // addBlock(0, 4, "red");
-            // addBlock(1, 4, "red");
-            // addBlock(2, 4, "red");
-
-            // removeBlock(1, 4);
-            // moveblock(2, 4, 1, 1, "red");
-
-            // addBlock(1, 0, "green");
-            // addBlock(1, 1, "red");
-            // addBlock(1, 2, "red");
-            // addBlock(1, 3, "red");
-            // addBlock(1, 4, "red");
-            // addBlock(1, 5, "red");
-            // addBlock(1, 6, "red");
-            // addBlock(1, 7, "red");
-            // addBlock(1, 8, "red");
-            // addBlock(1, 9, "red");
         </script>
     </body>
 </html>
