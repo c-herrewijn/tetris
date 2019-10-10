@@ -63,6 +63,20 @@
                     DOM_block.removeAttribute("bgcolor");
                 },
 
+                validate_cell: function(row, column) {
+                    if (row >= nr_rows || row < 0 || column >= nr_columns || column < 0) {
+                        // new position is outside the field
+                        return false;
+                    }
+                    if (field.field[row][column] === true) {
+                        // new position is already occupied
+                        return false;
+                    } else {
+                        // position is available
+                        return true;
+                    }
+                },
+
                 validate_fullrow: function(row) {
                     for (let column = 0; column < nr_columns; column++) {
                         if (field.field[row][column] != true) {
@@ -89,16 +103,8 @@
                     const current_row = active_block.row;
                     const current_column = active_block.column;
 
-                    if (new_row >= nr_rows || new_row < 0 || new_column >= nr_columns || new_column < 0) {
-                        // new position is outside the field
-                        return false;
-                    }
-
-                    if (field.field[new_row][new_column] === true) {
-                        // new position is already occupied
-                        return false;
-                    } else {
-                        // move is legal
+                    // check if move is legal
+                    if (field.validate_cell(new_row, new_column)) {
                         // update position
                         active_block.row = new_row;
                         active_block.column = new_column;
