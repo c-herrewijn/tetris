@@ -112,6 +112,12 @@
                         // update DOM
                         field.remove_block(current_row, current_column);
                         field.add_block(new_row, new_column, active_block.color);
+
+                        // check cell below the block
+                        if (field.validate_cell(new_row + 1, new_column) === false) {
+                            // the block is fixed so spawn a new one!
+                            active_block.spawn(0, 4, "red");
+                        }
                     }
                 }
             };
