@@ -89,16 +89,24 @@
                     const current_row = active_block.row;
                     const current_column = active_block.column;
 
-                    // TODO: check if new position is outside of field
-                    // TODO: check if new position is already occupied
+                    if (new_row >= nr_rows || new_row < 0 || new_column >= nr_columns || new_column < 0) {
+                        // new position is outside the field
+                        return false;
+                    }
 
-                    // update position
-                    active_block.row = new_row;
-                    active_block.column = new_column;
+                    if (field.field[new_row][new_column] === true) {
+                        // new position is already occupied
+                        return false;
+                    } else {
+                        // move is legal
+                        // update position
+                        active_block.row = new_row;
+                        active_block.column = new_column;
 
-                    // update DOM
-                    field.remove_block(current_row, current_column);
-                    field.add_block(new_row, new_column, active_block.color);
+                        // update DOM
+                        field.remove_block(current_row, current_column);
+                        field.add_block(new_row, new_column, active_block.color);
+                    }
                 }
             };
 
