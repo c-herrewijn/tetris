@@ -34,45 +34,32 @@
                     }
                     // add field to DOM
                     for (let i = 0; i < nr_rows; i++) {
-                        let newRow = tetris_table.insertRow(0);
-                        for (j = 0; j < nr_columns; j++) {
-                            let newCell = newRow.insertCell(0);
-                            // put text in the cell otherwise we can not give it a color later on
-                            newCell.appendChild(document.createTextNode(" "));
-                        }
+                        DOM.add_row();
                     }
                 },
 
                 add_block: function(row, column, color) {
-                    // add block to field
+                    // add block to field and DOM
                     field.field[row][column] = true;
-
-                    // make block visible in DOM
-                    const DOM_row = document.querySelectorAll("tr")[row];
-                    const DOM_block = DOM_row.querySelectorAll("td")[column];
-                    DOM_block.setAttribute("bgcolor", color);
+                    DOM.add_block(row, column, color);
                 },
 
                 remove_block: function(row, column) {
-                    // remove block from field
+                    // remove block from field and DOM
                     field.field[row][column] = false;
-
-                    // remove block from DOM
-                    const DOM_row = document.querySelectorAll("tr")[row];
-                    const DOM_block = DOM_row.querySelectorAll("td")[column];
-                    DOM_block.removeAttribute("bgcolor");
+                    DOM.remove_block(row, column);
                 },
 
                 validate_cell: function(row, column) {
                     if (row >= nr_rows || row < 0 || column >= nr_columns || column < 0) {
-                        // new position is outside the field
+                        // cell is outside the field
                         return false;
                     }
                     if (field.field[row][column] === true) {
-                        // new position is already occupied
+                        // cell is already occupied
                         return false;
                     } else {
-                        // position is available
+                        // cell is available
                         return true;
                     }
                 },
@@ -94,16 +81,9 @@
                     // add clean row to top of field
                     field.field.unshift(new Array(nr_columns));
 
-                    // remove row from DOM
-                    document.querySelectorAll("tr")[row].remove();
-
-                    // add clean row to top of field in DOM
-                    let newRow = tetris_table.insertRow(0);
-                    for (j = 0; j < nr_columns; j++) {
-                        let newCell = newRow.insertCell(0);
-                        // put text in the cell otherwise we can not give it a color later on
-                        newCell.appendChild(document.createTextNode(" "));
-                    }
+                    // update DOM
+                    DOM.remove_row(row);
+                    DOM.add_row();
                 }
             };
 
@@ -135,11 +115,11 @@
 
                     // check if move is legal
                     if (field.validate_cell(new_row, new_column)) {
-                        // update position
+                        // update position of active block
                         active_block.row = new_row;
                         active_block.column = new_column;
 
-                        // update DOM
+                        // update field & DOM
                         field.remove_block(current_row, current_column);
                         field.add_block(new_row, new_column, active_block.color);
 
@@ -156,6 +136,36 @@
                             active_block.spawn(0, 4, "red");
                         }
                     }
+                }
+            };
+
+            // DOM represenation functions
+            const DOM = {
+                add_row: function() {
+                    let newRow = tetris_table.insertRow(0);
+                    for (j = 0; j < nr_columns; j++) {
+                        let newCell = newRow.insertCell(0);
+                        // put text in the cell otherwise we can not give it a color later on
+                        newCell.appendChild(document.createTextNode(" "));
+                    }
+                },
+
+                remove_row: function(row) {
+                    document.querySelectorAll("tr")[row].remove();
+                },
+
+                add_block: function(row, column, color) {
+                    // make block visible in DOM
+                    const DOM_row = document.querySelectorAll("tr")[row];
+                    const DOM_block = DOM_row.querySelectorAll("td")[column];
+                    DOM_block.setAttribute("bgcolor", color);
+                },
+
+                remove_block: function(row, column) {
+                    // remove block from DOM
+                    const DOM_row = document.querySelectorAll("tr")[row];
+                    const DOM_block = DOM_row.querySelectorAll("td")[column];
+                    DOM_block.removeAttribute("bgcolor");
                 }
             };
 
