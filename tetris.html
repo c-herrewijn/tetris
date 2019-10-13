@@ -22,6 +22,7 @@
             const nr_rows = 20;
             const nr_columns = 10;
             const tetris_table = document.getElementById("tetris");
+            let drop_speed = 1000;
 
             // field
             let field = {
@@ -172,6 +173,9 @@
             // start game
             field.spawn();
             active_block.spawn(0, 4, "red");
+
+            // periodcially drop the active block
+            window.setInterval(active_block.move, drop_speed, 1, 0);
 
             // event listeners:
             window.addEventListener("keyup", function(e) {
