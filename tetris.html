@@ -85,6 +85,25 @@
                         }
                     }
                     return true;
+                },
+
+                remove_row: function(row) {
+                    // NOTE: only remove a row if there is no acitve block!
+                    // remove row from field
+                    field.field.splice(row, 1);
+                    // add clean row to top of field
+                    field.field.unshift(new Array(nr_columns));
+
+                    // remove row from DOM
+                    document.querySelectorAll("tr")[row].remove();
+
+                    // add clean row to top of field in DOM
+                    let newRow = tetris_table.insertRow(0);
+                    for (j = 0; j < nr_columns; j++) {
+                        let newCell = newRow.insertCell(0);
+                        // put text in the cell otherwise we can not give it a color later on
+                        newCell.appendChild(document.createTextNode(" "));
+                    }
                 }
             };
 
@@ -124,9 +143,16 @@
                         field.remove_block(current_row, current_column);
                         field.add_block(new_row, new_column, active_block.color);
 
-                        // check cell below the block
+                        // check cell below the block to see if the block gets fixed
                         if (field.validate_cell(new_row + 1, new_column) === false) {
-                            // the block is fixed so spawn a new one!
+                            // the block is fixed
+
+                            // check if the fixed block created a fullrow
+                            if (field.validate_fullrow(active_block.row)) {
+                                field.remove_row(active_block.row);
+                            }
+
+                            // spawn a new active block!
                             active_block.spawn(0, 4, "red");
                         }
                     }
@@ -139,7 +165,7 @@
 
             // event listeners:
             window.addEventListener("keyup", function(e) {
-                // press space (= 32) for maximal drop
+                // press space-bar (= 32) for maximal drop
                 if (e.keyCode === 32) {
                     const jumpdistance = active_block.find_max_jumpdistance();
                     if (jumpdistance > 0) {
