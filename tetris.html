@@ -43,13 +43,13 @@
                 add_block: function(row, column, color) {
                     // add block to field and DOM
                     field.field[row][column] = true;
-                    DOM.add_block(row, column, color);
+                    field.print_field_to_DOM();
                 },
 
                 remove_block: function(row, column) {
                     // remove block from field and DOM
                     field.field[row][column] = false;
-                    DOM.remove_block(row, column);
+                    field.print_field_to_DOM();
                 },
 
                 validate_cell: function(row, column) {
@@ -86,6 +86,20 @@
                     // update DOM
                     DOM.remove_row(row);
                     DOM.add_row();
+                },
+
+                print_field_to_DOM: function() {
+                    for (let row = 0; row < nr_rows; row++) {
+                        let DOM_row = document.querySelectorAll("tr")[row];
+                        for (let column = 0; column < nr_columns; column++) {
+                            let DOM_block = DOM_row.querySelectorAll("td")[column];
+                            if (field.field[row][column] === true) {
+                                DOM_block.setAttribute("bgcolor", "red");
+                            } else {
+                                DOM_block.removeAttribute("bgcolor");
+                            }
+                        }
+                    }
                 }
             };
 
@@ -152,20 +166,6 @@
 
                 remove_row: function(row) {
                     document.querySelectorAll("tr")[row].remove();
-                },
-
-                add_block: function(row, column, color) {
-                    // make block visible in DOM
-                    const DOM_row = document.querySelectorAll("tr")[row];
-                    const DOM_block = DOM_row.querySelectorAll("td")[column];
-                    DOM_block.setAttribute("bgcolor", color);
-                },
-
-                remove_block: function(row, column) {
-                    // remove block from DOM
-                    const DOM_row = document.querySelectorAll("tr")[row];
-                    const DOM_block = DOM_row.querySelectorAll("td")[column];
-                    DOM_block.removeAttribute("bgcolor");
                 }
             };
 
