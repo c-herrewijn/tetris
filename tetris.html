@@ -45,13 +45,11 @@
                 add_block: function(row, column, color) {
                     // add block to field and DOM
                     field.field[row][column] = true;
-                    field.print_field_to_DOM();
                 },
 
                 remove_block: function(row, column) {
                     // remove block from field and DOM
                     field.field[row][column] = false;
-                    field.print_field_to_DOM();
                 },
 
                 validate_cell: function(row, column) {
@@ -79,14 +77,14 @@
                 },
 
                 remove_row: function(row) {
-                    // NOTE: only remove a row if there is no acitve block!
-                    // remove full row, and add a new one
+                    // remove full row from field, and add a new one
                     field.field.splice(row, 1);
                     field.field.unshift(new Array(nr_columns));
                     field.print_field_to_DOM();
                 },
 
                 print_field_to_DOM: function() {
+                    // print field to DOM
                     for (let row = 0; row < nr_rows; row++) {
                         let DOM_row = document.querySelectorAll("tr")[row];
                         for (let column = 0; column < nr_columns; column++) {
@@ -98,6 +96,10 @@
                             }
                         }
                     }
+                    // print active block to DOM
+                    let DOM_row = document.querySelectorAll("tr")[active_block.row];
+                    let DOM_block = DOM_row.querySelectorAll("td")[active_block.column];
+                    DOM_block.setAttribute("bgcolor", active_block.color);
                 }
             };
 
@@ -107,7 +109,7 @@
                     active_block.row = row;
                     active_block.column = column;
                     active_block.color = color;
-                    field.add_block(row, column, color);
+                    field.print_field_to_DOM();
                 },
 
                 find_max_jumpdistance: function() {
@@ -132,16 +134,16 @@
                         // update position of active block
                         active_block.row = new_row;
                         active_block.column = new_column;
-
-                        // update field & DOM
-                        field.remove_block(current_row, current_column);
-                        field.add_block(new_row, new_column, active_block.color);
+                        field.print_field_to_DOM();
 
                         // check cell below the block to see if the block gets fixed
                         if (field.validate_cell(new_row + 1, new_column) === false) {
                             // the block is fixed
 
-                            // check if the fixed block created a fullrow
+                            // copy active block to field, so we can reinitialize it
+                            field.add_block(active_block.row, active_block.column, active_block.color);
+
+                            // check if the fixed block created a fullrow in the field
                             if (field.validate_fullrow(active_block.row)) {
                                 field.remove_row(active_block.row);
                             }
