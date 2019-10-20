@@ -9,6 +9,7 @@
                 border: 1px solid black;
                 width: 300px;
                 height: 600px;
+                empty-cells: show;
             }
         </style>
     </head>
@@ -145,9 +146,7 @@
                 add_row: function() {
                     let newRow = tetris_table.insertRow(0);
                     for (j = 0; j < nr_columns; j++) {
-                        let newCell = newRow.insertCell(0);
-                        // put text in the cell otherwise we can not give it a color later on
-                        newCell.appendChild(document.createTextNode(" "));
+                        newRow.insertCell(0);
                     }
                 },
 
