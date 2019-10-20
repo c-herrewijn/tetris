@@ -27,16 +27,18 @@
 
             // field
             let field = {
-                field: [],
-
-                spawn: function() {
+                initialize: function() {
+                    field.field = [];
                     // add empty rows and cells to the field matrix
                     for (let i = 0; i < nr_rows; i++) {
                         field.field[i] = new Array(nr_columns);
                     }
                     // add field to DOM
                     for (let i = 0; i < nr_rows; i++) {
-                        DOM.add_row();
+                        let newRow = tetris_table.insertRow(0);
+                        for (j = 0; j < nr_columns; j++) {
+                            newRow.insertCell(0);
+                        }
                     }
                 },
 
@@ -78,14 +80,10 @@
 
                 remove_row: function(row) {
                     // NOTE: only remove a row if there is no acitve block!
-                    // remove row from field
+                    // remove full row, and add a new one
                     field.field.splice(row, 1);
-                    // add clean row to top of field
                     field.field.unshift(new Array(nr_columns));
-
-                    // update DOM
-                    DOM.remove_row(row);
-                    DOM.add_row();
+                    field.print_field_to_DOM();
                 },
 
                 print_field_to_DOM: function() {
@@ -155,22 +153,8 @@
                 }
             };
 
-            // DOM represenation functions
-            const DOM = {
-                add_row: function() {
-                    let newRow = tetris_table.insertRow(0);
-                    for (j = 0; j < nr_columns; j++) {
-                        newRow.insertCell(0);
-                    }
-                },
-
-                remove_row: function(row) {
-                    document.querySelectorAll("tr")[row].remove();
-                }
-            };
-
             // start game
-            field.spawn();
+            field.initialize();
             active_block.spawn(0, 4, "red");
 
             // periodcially drop the active block
