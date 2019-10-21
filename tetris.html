@@ -80,7 +80,6 @@
                     // remove full row from field, and add a new one
                     field.field.splice(row, 1);
                     field.field.unshift(new Array(nr_columns));
-                    field.print_field_to_DOM();
                 },
 
                 print_field_to_DOM: function() {
@@ -96,15 +95,31 @@
                             }
                         }
                     }
-                    // print active block to DOM
-                    let DOM_row = document.querySelectorAll("tr")[active_block.row];
-                    let DOM_block = DOM_row.querySelectorAll("td")[active_block.column];
-                    DOM_block.setAttribute("bgcolor", active_block.color);
+
+                    // print the partial blocks of the active Block to the DOM
+                    for (let block_row = 0; block_row < active_block.partial_blocks.length; block_row++) {
+                        for (
+                            let block_column = 0;
+                            block_column < active_block.partial_blocks[block_row].length;
+                            block_column++
+                        ) {
+                            if (active_block.partial_blocks[block_row][block_column] === 1) {
+                                let DOM_row = document.querySelectorAll("tr")[active_block.row + block_row];
+                                let DOM_block = DOM_row.querySelectorAll("td")[active_block.column + block_column];
+                                DOM_block.setAttribute("bgcolor", active_block.color);
+                            }
+                        }
+                    }
                 }
+            };
+
+            var calculate_overlay_field_and_block = function() {
+                overlay = field.field;
             };
 
             // active block
             let active_block = {
+                partial_blocks: [[1, 1, 1], [1, 0, 0]],
                 spawn: function(row, column, color) {
                     active_block.row = row;
                     active_block.column = column;
