@@ -144,8 +144,24 @@
                     const current_row = active_block.row;
                     const current_column = active_block.column;
 
+                    let valid = true;
+
                     // check if move is legal
-                    if (field.validate_cell(new_row, new_column)) {
+                    for (let block_row = 0; block_row < active_block.partial_blocks.length; block_row++) {
+                        for (
+                            let block_column = 0;
+                            block_column < active_block.partial_blocks[block_row].length;
+                            block_column++
+                        ) {
+                            if (active_block.partial_blocks[block_row][block_column] === 1) {
+                                if (field.validate_cell(new_row + block_row, new_column + block_column) != true) {
+                                    valid = false;
+                                }
+                            }
+                        }
+                    }
+
+                    if (valid) {
                         // update position of active block
                         active_block.row = new_row;
                         active_block.column = new_column;

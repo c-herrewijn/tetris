@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tetris</title>
+    <style>
+        table  {
+            /* tetris field table should have a ratio 2:1 */
+            border:1px solid black;
+            width:300px ;
+            height:600px ;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tetris</h1>
+    <!-- empty table, this will be the tetris field -->
+    <table id="tetris"></table>
+
+    <script>
+
+        // global variables
+        // define size of the tetris field
+        var init_nr_cols = 10;
+        var init_nr_rows = 20;
+        var tetris_table = document.getElementById("tetris");
+        // initialize
+        var row_counter = 0;
+        var microblocks = [];
+
+        // global functions
+        // --------------------------------
+        function addRows(nr_rows) {
+            // Insert rows at the top of the table
+            for (var index = 0; index < nr_rows; index++) {
+                var newRow = tetris_table.insertRow(0);
+                for (var column_counter = 0; column_counter < init_nr_cols; column_counter++) {
+                    // Insert a cell at the end of the row, to get the correct number of columns
+                    var newCell = newRow.insertCell(-1);
+                    newCell.id = String(column_counter) + String(row_counter);
+                    // Put a space in the cell, to prevent that the cell is not shown
+                    var newText = document.createTextNode(' ');
+                    newCell.appendChild(newText);
+                }
+                row_counter++
+            }
+        }
+
+        function checkCell(column, row) {
+            //possible returns: 'current', 'occupied', and 'empty'
+            var cell_id = String(column) + String(row);
+            var testcell = document.getElementById(cell_id);
+            var color = testcell.getAttribute("bgcolor");
+            if (color == null) {
+                return "empty";
+            } else {
+                for (var i = 0; i < microblocks.length; i++) {
+                    if ((microblocks[i].column === column) && (microblocks[i].row === row)) {
+                        return "current"
+                    }
+                }
+            }
+            // other cases: occupied by non-active microblock
+            return "occupied"
+        }
+
+        // Classes
+        // --------------------------------
+        var L_block = function () {
+            this.bl1 = {
+                rel_col = -1
+                rel_row
+            }
+
+            function createMicroblocks
+        }
+
+
+        // 'Micro Block' class
+        var MicroBlock = function (color, column, row, d_rot_column, d_rot_row) {
+            this.color = color;
+            this.column = column;
+            this.row = row;
+            this.d_rot_column = d_rot_column;
+            this.d_rot_row = d_rot_row
+        };
+
+        // add functions to 'Micro Block' class
+        MicroBlock.prototype.addtoDOM = function () {
+            var id = String(this.column) + String(this.row);
+            var cell = document.getElementById(id);
+            cell.setAttribute("bgcolor", this.color);
+        }
+        MicroBlock.prototype.removefromDOM = function () {
+            var id = String(this.column) + String(this.row);
+            var cell = document.getElementById(id);
+            cell.removeAttribute("bgcolor");
+        }
+
+        MicroBlock.prototype.determine_new_position = function (action, direction) {
+            // function inputs:
+            //   action: {drop, rotate, sidemove}
+            //   direction: {1, -1}
+            if action === "drop" {
+                this.target_col = column;
+                this.target_row = row - 1;
+            }
+            if action === "rotate" {
+                this.target_col = column + (d_rot_column * direction)
+                this.target_row = row + (d_rot_row * direction)
+            }
+            if action === "sidemove" {
+                this.target_col = column + direction;
+                this.target_row = row;
+            }
+        }
+
+        MicroBlock.prototype.drop = function () {
+            this.removefromDOM();
+            this.row = this.row -1
+            this.addtoDOM();
+        }
+        MicroBlock.prototype.move = function (direction) {
+
+        }
+        MicroBlock.prototype.rotate = function (direction) {
+
+        }
+
+
+        // Create the tetris field
+        addRows(init_nr_rows);
+
+        // test, try to adjust the color of an individual cell
+        var testcell2 = document.getElementById("00");
+        testcell2.setAttribute("bgcolor", "red");
+
+        var mb1 = new MicroBlock('red', 5, 5);
+        mb1.addtoDOM();
+
+        var mb1 = new MicroBlock('red', 5, 5);
+        mb1.addtoDOM();
+
+
+
+        // create array with microblocks
+        var microblocks = []
+        microblocks[0] = mb1;
+        microblocks[1] = mb1;
+        console.log(microblocks.length);
+
+
+
+
+        var a = checkCell(1, 1);
+        var b = checkCell(0, 0);
+        var c = checkCell(5, 5);
+        console.log(a);
+        console.log(b);
+        console.log(c);
+
+        var testcell3 = document.getElementById("33");
+        testcell3.setAttribute("bgcolor", "yellow");
+        testcell3.removeAttribute("bgcolor");
+
+        mb1.drop();
+
+        // console.log(occupiescell(mb1, 5, 5));
+        // console.log(occupiescell(mb1, 5, 4));
+
+        // for (var i = 0; i < microblocks.length; i++) {
+        //     if ((microblocks[i].column === col) && (microblocks[i].row === row)) {
+        //         return
+        //     }
+
+
+        //     console.log(microblocks[i].color)
+        // }
+
+        // while (condition) {
+
+        // }
+
+
+
+        // for (const key in object) {
+        //     if (object.hasOwnProperty(key)) {
+        //         const element = object[key];
+
+        //     }
+        // }
+
+        // microblocks.forEach(function(element) {
+
+        // });
+
+
+    </script>
+
+
+</body>
+</html>
